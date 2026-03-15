@@ -1,11 +1,8 @@
-import { cookies } from "next/headers";
 import type { Metadata } from "next";
 import { Inter, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { ClerkProvider } from "@clerk/nextjs";
-import { ThemeProvider } from "@/provider/theme-provider";
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -27,30 +24,15 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const cookieStore = await cookies();
-  const defaultOpen = cookieStore.get("sidebar_state")?.value === "true";
-
   return (
-    <SidebarProvider defaultOpen={defaultOpen} className="h-svh">
-      <ClerkProvider>
-        <html lang="en" suppressHydrationWarning>
-          <body
-            className={`${inter.variable} ${geistMono.variable} antialiased`}
-          >
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-            >
-              <SidebarInset className="min-h-0 min-w-0">
-                <main className="flex min-h-0 flex-1 flex-col">{children}</main>
-              </SidebarInset>
-              <Toaster richColors position="bottom-right" />
-            </ThemeProvider>
-          </body>
-        </html>
-      </ClerkProvider>
-    </SidebarProvider>
+    <ClerkProvider>
+      <html lang="en" suppressHydrationWarning>
+        <body className={`${inter.variable} ${geistMono.variable} antialiased`}>
+          <main className="flex min-h-0 flex-1 flex-col">{children}</main>
+
+          <Toaster />
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
